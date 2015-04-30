@@ -33,7 +33,7 @@ public class Kmeans {
         return inputReader;
     }
     
-    public void startCluster(String path){
+    public void startCluster(String path, int numOfCluster){
         try {
             // TODO code application logic here
             SimpleKMeans kmeans = new SimpleKMeans();
@@ -42,7 +42,7 @@ public class Kmeans {
             
             //important parameter to set: preserver order, number of cluster.
             kmeans.setPreserveInstancesOrder(true);
-            kmeans.setNumClusters(6);
+            kmeans.setNumClusters(numOfCluster);
             
             BufferedReader datafile = readDataFile(path);
             Instances data = new Instances(datafile);

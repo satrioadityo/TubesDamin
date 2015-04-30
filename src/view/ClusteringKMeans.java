@@ -9,10 +9,7 @@ package view;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.JOptionPane;
 import kmeansapps.Kmeans;
 
 /**
@@ -26,6 +23,9 @@ public class ClusteringKMeans extends javax.swing.JFrame {
      */
     public ClusteringKMeans(){
         initComponents();
+        textarea.setText("Please load your data that want to cluster.\n"
+                + "Set the number of cluster.\n"
+                + "Click button cluster in the right bottom.");
     }
 
     /**
@@ -44,6 +44,8 @@ public class ClusteringKMeans extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         textarea = new javax.swing.JTextArea();
         btnCluster = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        txtJumlahCluster = new javax.swing.JTextField();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         Open = new javax.swing.JMenuItem();
@@ -81,7 +83,7 @@ public class ClusteringKMeans extends javax.swing.JFrame {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel2.setBackground(new java.awt.Color(0, 0, 0));
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 204, 204)));
 
         textarea.setColumns(20);
@@ -95,6 +97,9 @@ public class ClusteringKMeans extends javax.swing.JFrame {
             }
         });
 
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setText("Number of Cluster : ");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -102,9 +107,12 @@ public class ClusteringKMeans extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 463, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtJumlahCluster, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCluster)))
                 .addContainerGap())
         );
@@ -114,7 +122,10 @@ public class ClusteringKMeans extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCluster)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnCluster)
+                    .addComponent(jLabel2)
+                    .addComponent(txtJumlahCluster, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
@@ -196,7 +207,21 @@ public class ClusteringKMeans extends javax.swing.JFrame {
     private void btnClusterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClusterActionPerformed
         // TODO add your handling code here:
         Kmeans k = new Kmeans();
-        k.startCluster(file.getAbsolutePath());
+        
+        try {
+            if (Integer.parseInt(txtJumlahCluster.getText())>1) {
+                k.startCluster(file.getAbsolutePath(),Integer.parseInt(txtJumlahCluster.getText()));
+            }
+            else{
+                JOptionPane.showMessageDialog(rootPane, "Input number of cluster greater than 1", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(rootPane, "Number of cluster null or not an integer", 
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+        
     }//GEN-LAST:event_btnClusterActionPerformed
 
     /**
@@ -240,11 +265,13 @@ public class ClusteringKMeans extends javax.swing.JFrame {
     private javax.swing.JButton btnCluster;
     private javax.swing.JFileChooser chooser;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea textarea;
+    private javax.swing.JTextField txtJumlahCluster;
     // End of variables declaration//GEN-END:variables
 }
