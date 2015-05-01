@@ -11,7 +11,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import view.ClusteringKMeans;
+import javax.swing.JFrame;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import weka.clusterers.SimpleKMeans;
 import weka.core.Instances;
 
@@ -22,31 +25,30 @@ import weka.core.Instances;
 public class Kmeans {
     
     public static BufferedReader readDataFile(String filename) {
-        BufferedReader inputReader = null;
+        BufferedReader inReader = null;
 
         try {
-                inputReader = new BufferedReader(new FileReader(filename));
+                inReader = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException ex) {
-                System.err.println("File not found: " + filename);
+                System.err.println("File you are choose is not found: " + filename);
         }
-
-        return inputReader;
+        return inReader;
     }
     
-    public void startCluster(String path, int numOfCluster){
+    public void startCluster(String path, int numOfCluster, JTable tableResult,JFrame apps){
         try {
             // TODO code application logic here
             SimpleKMeans kmeans = new SimpleKMeans();
+            String[] columnNames = new String[numOfCluster];
+            
+            
             
             kmeans.setSeed(10);
-            
-            //important parameter to set: preserver order, number of cluster.
             kmeans.setPreserveInstancesOrder(true);
             kmeans.setNumClusters(numOfCluster);
             
             BufferedReader datafile = readDataFile(path);
             Instances data = new Instances(datafile);
-            
             
             kmeans.buildClusterer(data);
             
@@ -54,10 +56,46 @@ public class Kmeans {
             // The array has as many elements as the number of instances
             int[] assignments = kmeans.getAssignments();
             
+            //setting columNames
+            for (int i = 0; i < numOfCluster; i++) {
+                columnNames[i] = "Cluster "+i+"";
+            }
+            
             int i=0;
             for(int clusterNum : assignments) {
                 System.out.printf("Instance %d -> Cluster %d \n", i, clusterNum);
                 i++;
+            }
+            
+            tableResult.setModel(new DefaultTableModel(
+            new Object[][]{
+            },
+            columnNames));
+            apps.setVisible(true);
+            
+            int j=0;
+            DefaultTableModel model = (DefaultTableModel) tableResult.getModel();
+            for(int clusterNum : assignments) {
+                if (clusterNum==0){
+                    model.addRow(new Object[]{j, "", "", "", "", ""});
+                }
+                else if (clusterNum==1){
+                    model.addRow(new Object[]{"", j, "", "", "", ""});
+                }
+                else if (clusterNum==2){
+                    model.addRow(new Object[]{"", "", j, "", "", ""});
+                }
+                else if (clusterNum==3){
+                    model.addRow(new Object[]{"", "", "", j, "", ""});
+                }
+                else if (clusterNum==4){
+                    model.addRow(new Object[]{"", "", "", "", j, ""});
+                }
+                else if (clusterNum==5){
+                    model.addRow(new Object[]{"", "", "", "", "", j});
+                }
+                
+                j++;
             }
         } catch (Exception ex) {
             Logger.getLogger(Kmeans.class.getName()).log(Level.SEVERE, null, ex);

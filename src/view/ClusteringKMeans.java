@@ -26,6 +26,7 @@ public class ClusteringKMeans extends javax.swing.JFrame {
         textarea.setText("Please load your data that want to cluster.\n"
                 + "Set the number of cluster.\n"
                 + "Click button cluster in the right bottom.");
+        tcr = new TableClusteringResult();
     }
 
     /**
@@ -178,6 +179,7 @@ public class ClusteringKMeans extends javax.swing.JFrame {
 
     
     File file;
+    TableClusteringResult tcr;
 
     public File getFile() {
         return file;
@@ -210,7 +212,8 @@ public class ClusteringKMeans extends javax.swing.JFrame {
         
         try {
             if (Integer.parseInt(txtJumlahCluster.getText())>1) {
-                k.startCluster(file.getAbsolutePath(),Integer.parseInt(txtJumlahCluster.getText()));
+                k.startCluster(file.getAbsolutePath(),Integer.parseInt(txtJumlahCluster.getText()),
+                        tcr.getTblResult(),tcr);
             }
             else{
                 JOptionPane.showMessageDialog(rootPane, "Input number of cluster greater than 1", 
